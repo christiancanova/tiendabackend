@@ -1,0 +1,20 @@
+section.mt-6
+  h2(style='color:crimson; text-align: center;') LISTADO DE PRODUCTOS
+if products.length > 0
+    .container.is-flex.is-justify-content-space-between.is-flex-wrap-wrap
+        each product in products 
+            .card(style='width: 250px; margin: 30px')
+                .card-image(style='padding: 15px')
+                    figure.image.is-4by3
+                        img(src=product.thumbnail alt='Placeholder image')
+                .card-content
+                    .media
+                        .media-content
+                            p.title.is-4 
+                                src=product.title
+                            p.subtitle.is-6 $
+                                src=product.price
+else
+    .notification.is-danger
+        p(style='text-align: center;') No se encontraron productos
+    

@@ -1,0 +1,28 @@
+<section class="mt-6">
+<h2 style="color:crimson; text-align: center;">LISTADO DE PRODUCTOS</h2>
+{{#if products.length }}
+    <div class="container is-flex is-justify-content-space-between is-flex-wrap-wrap">
+      {{#each products}} 
+      <div class="card" style="width: 250px; margin: 30px">
+        <div class="card-image" style="padding: 15px">
+          <figure class="image is-4by3">
+            <img src={{this.thumbnail}} alt="Placeholder image" />
+          </figure>
+        </div>
+        <div class="card-content">
+          <div class="media">
+            <div class="media-content">
+              <p class="title is-4">{{this.title}}</p>
+              <p class="subtitle is-6">${{this.price}}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      {{/each}}
+    </div>
+{{else}}
+  <div class="notification is-danger">
+        <p style="text-align: center;">No se encontraron productos<p>
+  </div>
+{{/if}}
+</section>
