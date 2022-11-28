@@ -4,7 +4,8 @@ const Container = require('../container')
 const file = './products.txt';
 const containerProducts = new Container();
 const multer = require('multer');
-
+const path = require('path');
+const myScript = 'public/main.js';
 
 // Multer config (para subir archivos).
 // 'photo' es el nombre del campo en el formulario.
@@ -21,7 +22,7 @@ router.use(multer({storage}).single('thumbnail'));
 
 router.get('/', (req, res) => {
    const products = containerProducts.getAll(file)
-   res.render('index.pug', { products });
+   res.render('index.ejs', { products ,  myScript});
 }
 );
 
@@ -41,6 +42,7 @@ router.post('/', (req, res) => {
    body.thumbnail =  '/uploads/'+photo.filename;
    containerProducts.saveProduct(body, file);
    res.redirect('/api/products');
+   return false
 }
 );
 
