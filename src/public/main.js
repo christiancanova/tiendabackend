@@ -1,5 +1,7 @@
+console.log(" main.js loaded");
 
  const socket = io();
+
  const div = document.getElementById('messages');
  const btn = document.getElementById('enviar');
  const inputNombre = document.getElementById('nombre');
@@ -11,11 +13,11 @@
  socket.on('user-connected', (name)=>{
         console.log('user-connected',name);
  });
-
+ 
  btn.addEventListener('click', () => {
      const texto = inputTexto.value;
      inputTexto.value = '';
-
+     //enviar mensaje al servidor
      socket.emit('new-message', {
          user: currentUser,
          text: texto,
@@ -61,7 +63,13 @@
  })
 
 
- getNow = () => {
+getNow = () => {
     const now = new Date();
     return `${now.getHours()}:${now.getMinutes()}`;
+}
+
+
+
+function showProductDetail(productId) {
+    window.location.href = `/api/productos/${productId}`;
 }
