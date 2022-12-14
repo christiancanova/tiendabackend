@@ -1,11 +1,7 @@
-const { Router } = require("express");
+import { Router } from "express";
 const router = Router();
-const file = "./carrito.txt";
-const Container = require("../persistence/containerCarrito.js");
-const contenedor = new Container();
-const myScript = 'public/main.js';
-
-const admin = true;
+import ContenedorCarritos from "../contenedores/sql/contenedorCarritos.js";
+const contenedor = new ContenedorCarritos();
 
 router.get("/", async (req, res) => {
   try {
@@ -20,7 +16,7 @@ router.get("/", async (req, res) => {
 
 router.get("/:id", async (req, res) => {
   try {
-    const carrito = await contenedor.getById(req.params.id);
+    const carrito = await contenedor.getOne(req.params.id);
     carrito
       ? res.status(200).json(carrito)
       : res
@@ -31,9 +27,9 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-router.post("/",  (req, res) => {
+router.post("/", async (req, res) => {
   try {
-    const nuevoCarrito =  contenedor.create(req.body);
+    const nuevoCarrito = await contenedor.create(req.body);
     res.status(201).json({
       message: "Carrito creado con éxito",
       carrito: nuevoCarrito,
@@ -46,7 +42,7 @@ router.post("/",  (req, res) => {
 // borrar un carrito por id
 router.delete("/:id", async (req, res) => {
   try {
-    const carrito = await contenedor.getById(req.params.id);
+    const carrito = await contenedor.getOne(req.params.id);
     if (carrito) {
       const carritoDeleted = await contenedor.deleteById(req.params.id);
       res.status(200).json({
@@ -70,10 +66,10 @@ router.post("/:idCarrito/productos/:idProducto", async (req, res) => {
   try {
     const idCarrito = req.params.idCarrito;
     const idProducto = req.params.idProducto;
-    const carrito = await contenedor.getById(idCarrito);
-    const producto = await contenedor.getByIdProducto(idProducto);
+    const carrito = await contenedor.getOne(idCarrito);
+    const producto = await contenedor.getOne(idProducto);
     if (idCarrito && idProducto) {
-      await contenedor.agregarProductoAlCarrito(idCarrito, idProducto);
+      await contenedor.agregarProducto(idCarrito, idProducto);
 
       res.status(201).json({
         message: "Producto agregados con éxito",
@@ -99,10 +95,10 @@ router.delete("/:idCarrito/productos/:idProducto", async (req, res) => {
   try {
     const idCarrito = req.params.idCarrito;
     const idProducto = req.params.idProducto;
-    const carrito = await contenedor.getById(idCarrito);
-    const producto = await contenedor.getByIdProducto(idProducto);
+    const carrito = await contenedor.getOne(idCarrito);
+    const producto = await contenedor.getOne(idProducto);
     if (idCarrito && idProducto) {
-      await contenedor.borrarProductoDelCarrito(idCarrito, idProducto);
+      await contenedor.borrarProducto(idCarrito, idProducto);
 
       res.status(200).json({
         message: "Producto eliminado con éxito",
@@ -128,9 +124,9 @@ router.delete("/:idCarrito/productos/:idProducto", async (req, res) => {
 // TODO: listas productos de un carrito
 router.get("/:id/productos", async (req, res) => {
   try {
-    const carrito = await contenedor.getById(req.params.id);
+    const carrito = await contenedor.getOne(req.params.id);
     if(carrito){
-      const productos = await contenedor.listarProductosDeUnCarrito(req.params.id);
+      const productos = await contenedor.listarProductosDelCarrito(req.params.id);
       res.status(200).json(productos);
     }
   } catch (err) {
@@ -138,4 +134,4 @@ router.get("/:id/productos", async (req, res) => {
   }
 });
 
-module.exports = router;
+export default router;
